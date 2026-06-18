@@ -309,8 +309,9 @@ Structure varies by exchange:
 **Extraction strategy** (search by section name, not page number):
 
 1. **Main Business**: Search for "发行人主营业务情况" or "发行人主营业务经营情况", extract first 500 chars
-2. **Financials**: Search for "主要财务数据和财务指标", find nearby table, extract Revenue (营业收入), Net Profit (净利润), Gross Margin (毛利率) — **mandatory metrics**
+2. **Financials**: Search for "主要财务数据和财务指标" or "主要财务指标", find nearby table, extract Revenue (营业收入), Net Profit (净利润), Gross Margin (毛利率), ROE (净资产收益率) — **mandatory metrics**
 3. **Risk Factors**: Search for "风险因素", extract key risk titles
+4. **⚠️ NEVER write "未提取到" or "需进一步读取" in the report — if not found in overview, search the full text; if still missing, extract from narrative text**
 
 **Mandatory financial metrics** (report is incomplete without these):
 
