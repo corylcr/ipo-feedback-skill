@@ -18,3 +18,12 @@ downloads/
 
 # OS
 .DS_Store
+
+# Sensitive files
+.env
+.env.*
+*.key
+*.pem
+*.p12
+config.local.*
+*.local
