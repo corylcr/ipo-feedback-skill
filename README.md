@@ -262,6 +262,95 @@ ipo-feedback-skill/
     └── SZSE/
 ```
 
+## 📐 Document Structure Guide (for Agent Integration)
+
+This tool outputs raw extracted text. Your Agent (LLM) is responsible for intelligent analysis and report generation. Below are the standard document structures for each exchange to help your Agent locate key information efficiently.
+
+### Inquiry Letter (审核问询函)
+
+Standardized across all exchanges:
+
+1. **Opening**: Addressed to issuer + sponsor, requesting response within 20 business days
+2. **Body**: Numbered "问题1", "问题2", etc., each containing:
+   - Question title (e.g., "业绩增长可持续性")
+   - Background info (citing application documents)
+   - Specific requirements ("请发行人：（1）...（2）...")
+3. **Closing**: Request for sponsor/auditor verification
+
+**Extraction**: Split by "问题N" pattern. Each question title = a risk signal. No need to read the full document.
+
+### Feedback Reply (问询回复)
+
+Standardized across all exchanges:
+
+1. **Opening**: Summary of reply
+2. **Body**: Numbered "问题1", "问题2", matching inquiry questions
+3. **Key marker**: `【回复】` followed by the company's response
+
+**Extraction**: Find `【回复】` markers, extract the core conclusions.
+
+### Prospectus Registration Draft (招股说明书注册稿)
+
+Structure varies by exchange:
+
+| Content | BSE (北交所) | SSE (上交所) | SZSE (深交所) |
+|---------|-------------|-------------|--------------|
+| Overview | 第二节 概览 | 第二节 概览 | 第二节 概览 |
+| Main Business | **第五节** "发行人主营业务情况" | **第二节** "发行人主营业务经营情况" | **第二节** "发行人主营业务经营情况" |
+| Financials | "主要财务数据和财务指标" | "发行人**报告期**的主要财务数据和财务指标" | "发行人**报告期内**的主要财务数据和财务指标" |
+| Financial Unit | 元 (yuan) | 万元 (10K yuan) | 万元 or 亿元 |
+| Risk Factors | 第三节 风险因素 | 第三节 风险因素 | 第三节 风险因素 |
+
+**Key differences**:
+- BSE's main business section is in **第五节** (not 第二节), title is "发行人主营业务情况" (no "经营")
+- SSE/SZSE's main business is in **第二节 概览**, title is "发行人主营业务经营情况"
+- Financial data titles differ slightly — use fuzzy search for "主要财务数据和财务指标"
+
+**Extraction strategy** (search by section name, not page number):
+
+1. **Main Business**: Search for "发行人主营业务情况" or "发行人主营业务经营情况", extract first 500 chars
+2. **Financials**: Search for "主要财务数据和财务指标", find nearby table, extract Revenue (营业收入), Net Profit (净利润), Gross Margin (毛利率) — **mandatory metrics**
+3. **Risk Factors**: Search for "风险因素", extract key risk titles
+
+**Mandatory financial metrics** (report is incomplete without these):
+
+| Metric | Chinese | Format |
+|--------|---------|--------|
+| Revenue | 营业收入 | X.XX亿 or XXXX万 |
+| Net Profit | 净利润 | X.XX亿 or XXXX万 |
+| Gross Margin | 毛利率 | XX.XX% |
+
+### Recommended Report Format (Chinese)
+
+```markdown
+# IPO 反馈报告
+**时间范围**: YYYY-MM-DD ~ YYYY-MM-DD
+
+共更新 **N** 个项目: 问询函 **X**, 注册稿 **Y**
+
+---
+
+## {公司名} ({股票代码})
+
+### {问询函 / 注册稿}
+
+- 发布日期: YYYY-MM-DD
+- PDF: [{标题}]({URL})
+
+**{智能提取的关键信息}**
+
+**关注点:**
+> {Agent 分析的风险和亮点}
+
+---
+
+## 快速筛选
+
+| 公司 | 交易所 | 亮点 | 风险 | 关注度 |
+|------|--------|------|------|--------|
+| ... | BSE/SSE/SZSE | ... | ... | ⭐⭐⭐⭐⭐ |
+```
+
 ## ⚠️ Disclaimer
 
 All data and files obtained through this project are from **publicly available information** on official exchange websites. By using this project, you acknowledge and agree to the following:
