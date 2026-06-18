@@ -160,7 +160,7 @@ The output includes content analysis for each document type:
 ### Markdown (default, for terminal reading)
 
 ```
-# BSE IPO Feedback Report
+# IPO Feedback Report
 **Period**: 2026-06-17 ~ 2026-06-18
 
 Total **6** projects updated: inquiry letters **1**, registration drafts **5**
@@ -182,6 +182,9 @@ Total **6** projects updated: inquiry letters **1**, registration drafts **5**
 2. **销售真实性及收入确认准确性**
    Focus: 发行人存在部分客户与供应商重合的情况...
 
+**关注点:**
+> 核心产品在光伏领域销售崩塌，毛利率持续下滑，销售真实性被质疑...
+
 ---
 
 ## 威易发 (872893)
@@ -197,17 +200,32 @@ Total **6** projects updated: inquiry letters **1**, registration drafts **5**
 
 **Key Financials:**
 
-- Revenue: ['149743406.85', '133645640.55', '106433089.82']
-- Net Profit: ['63274315.84', '65656683.26', '46253309.27']
-- Gross Margin: ['69.12%', '69.12%', '67.54%']
-- ROE: ['28.17%', '40.04%', '44.25%']
+| Metric | 2025 | 2024 | 2023 |
+|--------|------|------|------|
+| Revenue | 1.50亿 | 1.34亿 | 1.06亿 |
+| Net Profit | 6327万 | 6566万 | 4625万 |
+| Gross Margin | 69.12% | 69.12% | 67.54% |
+| ROE | 28.17% | 40.04% | 44.25% |
+
+**关注点:**
+> 毛利率 69% 极高，客户质量好，但 ROE 从 44% 降到 28%...
 
 ---
+
+## Quick Summary
+
+| Company | Highlights | Risks | Rating |
+|---------|-----------|-------|--------|
+| 金钛股份 | 军工海绵钛，净利增长快 | 毛利率偏低，周期性 | ⭐⭐⭐⭐⭐ |
+| 威易发 | 毛利率 69%，涡轮增压密封件 | 规模小，ROE 稀释 | ⭐⭐⭐⭐ |
+| ... | ... | ... | ... |
 
 **Trash**: 3 old files (>30 days) moved to trash
   - 2026-05-01_OldCompany_...pdf
   - ...
 ```
+
+> **Note**: The CLI outputs structured data. Agent adds **关注点** analysis and **Quick Summary** table using LLM.
 
 ### JSON (`--format json`, for Agent consumption)
 

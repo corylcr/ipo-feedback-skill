@@ -37,8 +37,7 @@ def print_markdown(report: FeedbackReport, cleaned_files: list[str] | None = Non
     from .prospectus import extract_prospectus_summary
     from pathlib import Path
 
-    exchange_name = config.EXCHANGE_NAMES.get(report.exchange, report.exchange)
-    print(f"\n# {exchange_name} IPO Feedback Report")
+    print(f"\n# IPO Feedback Report")
     print(f"**Period**: {report.date_range}\n")
 
     if not report.projects:
