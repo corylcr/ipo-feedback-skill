@@ -1,28 +1,20 @@
+# lark-cli installed skills
+.agents/
+.claude/
+.hermes/
+
 # Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
 venv/
-env/
+__pycache__/
+*.pyc
 *.egg-info/
-dist/
-build/
-*.egg
+
+# Downloads (PDFs)
+downloads/
 
 # IDE
 .vscode/
 .idea/
-*.swp
-*.swo
-*~
 
 # OS
 .DS_Store
-Thumbs.db
-
-# Project specific
-downloads/
-*.pdf
-.env
