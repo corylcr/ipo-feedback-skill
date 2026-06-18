@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ipo-feedback-skill"
+version = "0.1.0"
+description = "A skill that scrapes IPO feedback documents (inquiry letters & replies) from BSE, SSE, and SZSE"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.31",
+    "pdfplumber>=0.11",
+    "send2trash>=1.8",
+]
+
+[project.optional-dependencies]
+sse = ["playwright>=1.40"]
+all = ["playwright>=1.40"]
+
+[project.scripts]
+ipo-feedback = "ipo_feedback.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["ipo_feedback*"]
