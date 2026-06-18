@@ -155,6 +155,7 @@ def print_json(report: FeedbackReport):
                 "stock_code": p.stock_code,
                 "inquiry": doc_to_dict(p.inquiry),
                 "reply": doc_to_dict(p.reply),
+                "prospectus": doc_to_dict(p.prospectus),
             }
             for p in report.projects
         ],
