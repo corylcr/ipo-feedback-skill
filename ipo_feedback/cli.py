@@ -32,12 +32,10 @@ def fetch_report(exchange: str, days: int, download: bool, parse: bool) -> Feedb
 
 
 def print_markdown(report: FeedbackReport, cleaned_files: list[str] | None = None):
-    """Print report as Markdown to stdout."""
-    from .analyzer import analyze_inquiry_letter, analyze_feedback_reply
-    from .prospectus import extract_prospectus_summary
+    """Print raw extracted text for Agent to analyze with LLM."""
     from pathlib import Path
 
-    print(f"\n# IPO Feedback Report")
+    print(f"\n# IPO Feedback Data")
     print(f"**Period**: {report.date_range}\n")
 
     if not report.projects:
@@ -58,7 +56,7 @@ def print_markdown(report: FeedbackReport, cleaned_files: list[str] | None = Non
     print(f"Total **{len(report.projects)}** projects updated: {', '.join(parts)}\n")
     print("---\n")
 
-    # Projects
+    # Projects — output raw text, Agent does intelligent extraction
     for project in report.projects:
         code_str = f" ({project.stock_code})" if project.stock_code else ""
         print(f"## {project.company_name}{code_str}\n")
@@ -69,15 +67,11 @@ def print_markdown(report: FeedbackReport, cleaned_files: list[str] | None = Non
             print(f"### Inquiry Letter\n")
             print(f"- Published: {doc.publish_date}")
             print(f"- PDF: [{doc.title}]({doc.pdf_url})\n")
-
-            analysis = analyze_inquiry_letter(doc.content_text)
-            if analysis["questions"]:
-                print(f"**{len(analysis['questions'])} questions raised:**\n")
-                for q in analysis["questions"]:
-                    print(f"{q['number']}. **{q['title']}**")
-                    if q["focus"]:
-                        print(f"   Focus: {q['focus'][:200]}")
-                    print()
+            if doc.content_text and not doc.content_text.startswith("["):
+                print(f"**Extracted Text:**\n")
+                print(f"```\n{doc.content_text}\n```\n")
+            else:
+                print(f"*(Text extraction failed or PDF not downloaded)*\n")
 
         # --- Feedback Reply ---
         if project.reply:
@@ -85,15 +79,11 @@ def print_markdown(report: FeedbackReport, cleaned_files: list[str] | None = Non
             print(f"### Feedback Reply\n")
             print(f"- Published: {doc.publish_date}")
             print(f"- PDF: [{doc.title}]({doc.pdf_url})\n")
-
-            analysis = analyze_feedback_reply(doc.content_text)
-            if analysis["topics"]:
-                print(f"**{len(analysis['topics'])} topics addressed:**\n")
-                for t in analysis["topics"]:
-                    print(f"{t['number']}. **{t['title']}**")
-                    if t["approach"]:
-                        print(f"   Reply: {t['approach'][:200]}")
-                    print()
+            if doc.content_text and not doc.content_text.startswith("["):
+                print(f"**Extracted Text:**\n")
+                print(f"```\n{doc.content_text}\n```\n")
+            else:
+                print(f"*(Text extraction failed or PDF not downloaded)*\n")
 
         # --- Prospectus Registration Draft ---
         if project.prospectus:
@@ -101,27 +91,13 @@ def print_markdown(report: FeedbackReport, cleaned_files: list[str] | None = Non
             print(f"### Registration Draft\n")
             print(f"- Published: {doc.publish_date}")
             print(f"- PDF: [{doc.title}]({doc.pdf_url})\n")
-
-            pdf_path = Path(doc.pdf_path)
-            if pdf_path.exists():
-                summary = extract_prospectus_summary(pdf_path)
-                if summary.get("main_business"):
-                    print(f"**Main Business:**\n")
-                    print(f"{summary['main_business'][:500]}\n")
-                if summary.get("financials"):
-                    print(f"**Key Financials:**\n")
-                    f = summary["financials"]
-                    if "revenue" in f:
-                        print(f"- Revenue: {f['revenue']}")
-                    if "net_profit" in f:
-                        print(f"- Net Profit: {f['net_profit']}")
-                    if "gross_margin" in f:
-                        print(f"- Gross Margin: {f['gross_margin']}")
-                    if "roe" in f:
-                        print(f"- ROE: {f['roe']}")
-                    print()
+            if doc.content_text and not doc.content_text.startswith("["):
+                print(f"**Extracted Text:**\n")
+                print(f"```\n{doc.content_text[:8000]}\n```\n")
+                if len(doc.content_text) > 8000:
+                    print(f"*[Truncated: full text is {len(doc.content_text)} chars, showing first 8000]*\n")
             else:
-                print(f"*(PDF not downloaded yet)*\n")
+                print(f"*(Text extraction failed or PDF not downloaded)*\n")
 
         print("---\n")
 
