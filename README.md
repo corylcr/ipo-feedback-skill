@@ -149,58 +149,11 @@ skills:
 
 The Agent reads the JSON output and uses its LLM to generate summary reports.
 
-## Output format
+## Output Formats
 
-The output includes content analysis for each document type:
+### Markdown (`--format markdown`, default)
 
-- **Inquiry letters**: Questions raised by the exchange, with focus areas
-- **Feedback replies**: Topics addressed and reply approaches
-- **Prospectus**: Main business description and key financials (revenue, net profit, gross margin, ROE)
-
-### Markdown (default, for terminal reading)
-
-```
-# IPO Feedback Data
-**Period**: 2026-06-17 ~ 2026-06-18
-
-Total **6** projects updated: inquiry letters **1**, registration drafts **5**
-
----
-
-## 旭阳新材 (874421)
-
-### Inquiry Letter
-
-- Published: 2026-06-18
-- PDF: [第二轮审核问询函](https://...)
-
-**Extracted Text:**
-
-```
-（原始提取文本）
-```
-
----
-
-## 威易发 (872893)
-
-### Registration Draft
-
-- Published: 2026-06-18
-- PDF: [招股说明书（注册稿）](https://...)
-
-**Extracted Text:**
-
-```
-（原始提取文本，前8000字符）
-```
-
----
-
-**Trash**: 3 old files (>30 days) moved to trash
-```
-
-> **Note**: CLI outputs raw extracted text. Agent uses LLM to generate the final report in Chinese format (标题: `# IPO 反馈报告`, 关注点, 快速筛选).
+CLI outputs raw extracted text in code blocks. Agent uses LLM to generate the final report.
 
 ### JSON (`--format json`, for Agent consumption)
 
