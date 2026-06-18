@@ -162,6 +162,65 @@ def print_json(report: FeedbackReport):
     print(json.dumps(output, ensure_ascii=False, indent=2))
 
 
+def setup_schedule():
+    """Set up a daily cron job to run at 9:30 AM."""
+    import platform
+    import subprocess
+
+    # Get the path to the ipo-feedback command
+    try:
+        result = subprocess.run(["which", "ipo-feedback"], capture_output=True, text=True)
+        cmd_path = result.stdout.strip()
+    except Exception:
+        cmd_path = "ipo-feedback"
+
+    if not cmd_path:
+        print("✗ Could not find ipo-feedback command. Make sure it's installed.")
+        sys.exit(1)
+
+    # Get the project directory (where downloads/ lives)
+    project_dir = config.PROJECT_ROOT
+
+    # Cron job: run at 9:30 AM daily, fetch yesterday's data from all exchanges
+    cron_line = f"30 9 * * * cd {project_dir} && {cmd_path} fetch --exchange all --days 1 >> {project_dir}/schedule.log 2>&1"
+
+    if platform.system() == "Darwin" or platform.system() == "Linux":
+        # Get existing crontab
+        try:
+            result = subprocess.run(["crontab", "-l"], capture_output=True, text=True)
+            existing_cron = result.stdout if result.returncode == 0 else ""
+        except Exception:
+            existing_cron = ""
+
+        # Check if already scheduled
+        if "ipo-feedback" in existing_cron:
+            print("⚠ Schedule already exists. Current cron job:")
+            for line in existing_cron.splitlines():
+                if "ipo-feedback" in line:
+                    print(f"  {line}")
+            print("\nTo update, run: crontab -e")
+            return
+
+        # Add new cron job
+        new_cron = existing_cron.rstrip() + "\n" + cron_line + "\n"
+        process = subprocess.Popen(["crontab", "-"], stdin=subprocess.PIPE, text=True)
+        process.communicate(input=new_cron)
+
+        if process.returncode == 0:
+            print(f"✅ Schedule set up successfully!")
+            print(f"   Runs daily at 9:30 AM")
+            print(f"   Fetches previous day's IPO feedback from all exchanges")
+            print(f"   Log file: {project_dir}/schedule.log")
+            print(f"\nTo view: crontab -l")
+            print(f"To remove: crontab -e (delete the ipo-feedback line)")
+        else:
+            print("✗ Failed to set up schedule")
+    else:
+        print(f"✗ Unsupported platform: {platform.system()}")
+        print(f"  Please add this cron job manually:")
+        print(f"  {cron_line}")
+
+
 def main():
     parser = argparse.ArgumentParser(
         prog="ipo-feedback",
@@ -202,6 +261,9 @@ def main():
         help="Output format (default: markdown)",
     )
 
+    # schedule command
+    subparsers.add_parser("schedule", help="Set up daily auto-fetch at 9:30 AM")
+
     args = parser.parse_args()
 
     if args.command is None:
@@ -233,6 +295,9 @@ def main():
                 print(f"✗ Error fetching {ex}: {e}")
                 import traceback
                 traceback.print_exc()
+
+    elif args.command == "schedule":
+        setup_schedule()
 
 
 if __name__ == "__main__":

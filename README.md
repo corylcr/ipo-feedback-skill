@@ -99,6 +99,22 @@ Options:
   -h, --help            Show help
 ```
 
+### `ipo-feedback schedule`
+
+Set up a daily cron job to automatically fetch IPO feedback at 9:30 AM.
+
+```bash
+ipo-feedback schedule
+```
+
+This will:
+- Create a cron job that runs daily at 9:30 AM
+- Fetch the previous day's feedback from all exchanges
+- Save output to `schedule.log` in the project directory
+
+To view: `crontab -l`
+To remove: `crontab -e` (delete the ipo-feedback line)
+
 ### Examples
 
 ```bash
@@ -110,6 +126,9 @@ ipo-feedback fetch --exchange bse --days 7 --no-download
 
 # JSON output for scripting
 ipo-feedback fetch --exchange szse --days 3 --format json > report.json
+
+# Set up auto-fetch schedule
+ipo-feedback schedule
 ```
 
 ## Configuration
