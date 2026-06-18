@@ -99,7 +99,7 @@ Options:
   -h, --help            Show help
 ```
 
-### `ipo-feedback schedule`
+### `ipo-feedback schedule` (Optional)
 
 Set up a daily cron job to automatically fetch IPO feedback at 9:30 AM.
 
@@ -107,13 +107,15 @@ Set up a daily cron job to automatically fetch IPO feedback at 9:30 AM.
 ipo-feedback schedule
 ```
 
-This will:
-- Create a cron job that runs daily at 9:30 AM
-- Fetch the previous day's feedback from all exchanges
-- Save output to `schedule.log` in the project directory
+This is an **optional** feature. When you run this command, it will ask if you want to set up the schedule. If yes:
+- Creates a cron job that runs daily at 9:30 AM
+- Fetches the previous day's feedback from all exchanges
+- Saves output to `schedule.log` in the project directory
 
 To view: `crontab -l`
 To remove: `crontab -e` (delete the ipo-feedback line)
+
+> **Note**: Different Agents may have their own scheduling mechanisms. This cron job is just one option for standalone use.
 
 ### Examples
 

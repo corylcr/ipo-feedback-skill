@@ -167,6 +167,15 @@ def setup_schedule():
     import platform
     import subprocess
 
+    print("📋 Daily Schedule Setup")
+    print("This will set up a cron job to fetch IPO feedback daily at 9:30 AM.")
+    print("The job will fetch the previous day's data from all exchanges.\n")
+
+    answer = input("Do you want to set up this schedule? (y/N): ").strip().lower()
+    if answer != 'y':
+        print("Schedule setup cancelled.")
+        return
+
     # Get the path to the ipo-feedback command
     try:
         result = subprocess.run(["which", "ipo-feedback"], capture_output=True, text=True)
@@ -207,7 +216,7 @@ def setup_schedule():
         process.communicate(input=new_cron)
 
         if process.returncode == 0:
-            print(f"✅ Schedule set up successfully!")
+            print(f"\n✅ Schedule set up successfully!")
             print(f"   Runs daily at 9:30 AM")
             print(f"   Fetches previous day's IPO feedback from all exchanges")
             print(f"   Log file: {project_dir}/schedule.log")
