@@ -1,6 +1,20 @@
-# ipo-feedback-skill
+<p align="center">
+  <img src="assets/header.svg" alt="ipo-feedback-skill" width="100%">
+</p>
 
-Automatically scrape IPO review feedback documents from BSE, SSE, and SZSE. Download PDFs and extract text for your Agent (Claude, GPT, etc.) to generate summary reports.
+<p align="center">
+  <em>Automated IPO review feedback scraper for AI agents</em>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/BSE-supported-brightgreen" alt="BSE">
+  <img src="https://img.shields.io/badge/SSE-supported-brightgreen" alt="SSE">
+  <img src="https://img.shields.io/badge/SZSE-supported-brightgreen" alt="SZSE">
+  <img src="https://img.shields.io/badge/Python-3.10+-blue" alt="Python">
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
+</p>
+
+---
 
 ## Features
 
