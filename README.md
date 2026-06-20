@@ -147,6 +147,25 @@ ipo-feedback fetch --exchange szse --days 3 --format json > report.json
 ipo-feedback schedule
 ```
 
+### ⚠️ BSE data pit and `--days 2` recommendation
+
+When scraping all three exchanges, **always use `--days 2`** instead of `--days 1`:
+
+```bash
+ipo-feedback fetch --exchange all --days 2
+```
+
+The BSE API may return empty results with `--days 1`, causing all BSE projects to be lost. Using `--days 2` ensures BSE data is captured reliably. Even with `--days 2`, BSE may occasionally return 0 projects (API maintenance or data delay) — this is normal.
+
+### Empty day handling
+
+Sometimes all three exchanges have no new IPO feedback documents on a given day (e.g., no new inquiry letters, replies, or registration drafts published). When integrating with an Agent or cron job:
+
+1. Run the CLI and check if the total project count is 0
+2. If 0 projects across all exchanges, **skip PDF download and analysis** — there is nothing to process
+3. Optionally create a brief notice (e.g., a Feishu/Slack message) stating: *"No new IPO feedback documents published on {date} across all three exchanges."*
+4. This avoids wasting time downloading and analyzing empty results
+
 ## Configuration
 
 ### Integrate with your Agent
