@@ -161,10 +161,11 @@ The BSE API may return empty results with `--days 1`, causing all BSE projects t
 
 Sometimes all three exchanges have no new IPO feedback documents on a given day (e.g., no new inquiry letters, replies, or registration drafts published). When integrating with an Agent or cron job:
 
-1. Run the CLI and check if the total project count is 0
-2. If 0 projects across all exchanges, **skip PDF download and analysis** — there is nothing to process
-3. Optionally create a brief notice (e.g., a Feishu/Slack message) stating: *"No new IPO feedback documents published on {date} across all three exchanges."*
-4. This avoids wasting time downloading and analyzing empty results
+1. Run the CLI with `--days 2` to ensure BSE data completeness
+2. **Filter by date**: Only keep projects whose `publish_date` equals yesterday. Ignore older projects even if the CLI returned them.
+3. If 0 projects remain after filtering (i.e., no documents were published yesterday), **skip PDF download and analysis** — there is nothing to process.
+4. Optionally create a brief notice (e.g., a Feishu/Slack message) stating: *"No new IPO feedback documents published on {yesterday's date} across all three exchanges."*
+5. This avoids wasting time downloading and analyzing empty or outdated results
 
 ## Configuration
 
